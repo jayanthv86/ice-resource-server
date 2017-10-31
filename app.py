@@ -51,7 +51,7 @@ def admin_users():
     status = request.args.get('status')
     new_list = []
     if is_admin():
-        url = '{0}/api/v1/groups/{1}/users'.format(AUTH_SERVER_DOMAIN, GROUP_ID)
+        url = '{0}/api/v1/users'.format(AUTH_SERVER_DOMAIN, GROUP_ID)
 
         headers = {
             'accept': "application/json",
