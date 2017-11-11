@@ -51,7 +51,7 @@ def admin_users():
     status = request.args.get('status')
     new_list = []
     if is_admin():
-        url = '{0}/api/v1/users'.format(AUTH_SERVER_DOMAIN, GROUP_ID)
+        url = '{0}/api/v1/groups/{1}/users'.format(AUTH_SERVER_DOMAIN, GROUP_ID)
 
         headers = {
             'accept': "application/json",
@@ -125,6 +125,38 @@ def send_success_email(user_id):
         }
 
     response = requests.request("POST", url, headers=headers, params=querystring)
+
+
+def deactivate_user(user_id):
+    url = "{0}/api/v1/users/{1}/lifecycle/deactivate".format(AUTH_SERVER_DOMAIN, user_id)
+
+    querystring = {"sendEmail": "true"}
+
+    headers = {
+        'content-type': "application/json",
+        'accept': "application/json",
+        'authorization': "SSWS {0}".format(API_KEY),
+        'cache-control': "no-cache",
+        }
+
+    response = requests.request("POST", url, headers=headers, params=querystring)
+
+
+@app.route('/activate', methods=['GET'])
+@cross_origin()
+def activate():
+    user_id = request.args.get('user')
+    print(user_id)
+    send_success_email(user_id)
+    return jsonify({}), 200
+
+@app.route('/deactivate', methods=['GET'])
+@cross_origin()
+def deactivate():
+    user_id = request.args.get('user')
+    print(user_id)
+    deactivate_user(user_id)
+    return jsonify({}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
